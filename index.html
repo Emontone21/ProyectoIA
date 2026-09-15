@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>¿Le va a gustar? — Bitácora del proyecto</title>
+<title>¿Qué contenido le gusta? — Bitácora del proyecto</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -24,10 +24,9 @@
   h1,h2,h3{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;line-height:1.2;margin:0}
   .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 96px;display:grid;grid-template-columns:262px 1fr;gap:40px}
   @media(max-width:880px){.wrap{grid-template-columns:1fr;gap:24px}}
-
   aside{position:sticky;top:24px;align-self:start}
   @media(max-width:880px){aside{position:static}}
-  .brand h1{font-size:30px;letter-spacing:-.01em}
+  .brand h1{font-size:28px;letter-spacing:-.01em}
   .brand p{margin:8px 0 0;color:var(--ink-soft);font-size:14px}
   .total{margin:22px 0 6px;font-size:13px;color:var(--ink-soft)}
   .bar{height:8px;background:var(--grid);border-radius:99px;overflow:hidden}
@@ -47,14 +46,20 @@
 
   .intro{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;margin-bottom:22px}
   .intro h2{font-size:22px;margin-bottom:10px}
-  .intro p{margin:0 0 10px;max-width:70ch}
+  .intro p{margin:0 0 10px;max-width:72ch}
   .intro dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:14px 0 0;font-size:15px}
   .intro dt{color:var(--ink-soft)}
   .intro dd{margin:0}
-  .rule{background:#FFF9E8;border:1px solid #E8D48A;border-radius:var(--radius);padding:18px 24px;margin-bottom:36px}
+  .rule{background:#FFF9E8;border:1px solid #E8D48A;border-radius:var(--radius);padding:18px 24px;margin-bottom:22px}
   .rule h3{font-size:17px;margin-bottom:8px}
   .rule p{margin:0 0 8px;max-width:72ch;font-size:15px}
   .rule p:last-child{margin-bottom:0}
+  .cov{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 28px;margin-bottom:36px}
+  .cov h3{font-size:18px;margin-bottom:12px}
+  .cov table{width:100%;border-collapse:collapse;font-size:15px}
+  .cov th{text-align:left;font-weight:500;color:var(--ink-soft);font-size:13px;padding:0 12px 8px 0;border-bottom:1px solid var(--line)}
+  .cov td{padding:10px 12px 10px 0;border-bottom:1px solid var(--grid);vertical-align:top}
+  .cov td:last-child{color:var(--ink-soft);white-space:nowrap;text-align:right;padding-right:0}
   .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:13px}
   .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
 
@@ -69,14 +74,12 @@
   .pbody{padding:18px 28px 24px}
   .why{margin:0 0 18px;padding:14px 18px;background:var(--grid);border-radius:var(--radius);font-size:15px;max-width:78ch}
   .why strong{display:block;margin-bottom:4px;font-weight:600}
-
   .task{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--grid)}
   .task:first-of-type{border-top:0}
   .task input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--done);cursor:pointer}
   .task label{cursor:pointer;font-weight:500}
   .task .because{font-size:14px;color:var(--ink-soft);margin-top:4px;max-width:72ch}
   .task.done label{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--done)}
-
   .deliver{margin:18px 0 0;padding:12px 18px;border:1px dashed var(--line);border-radius:var(--radius);font-size:15px;max-width:78ch}
   .notes{margin-top:18px}
   .notes label{font-size:14px;color:var(--ink-soft);display:block;margin-bottom:6px}
@@ -90,8 +93,8 @@
 <div class="wrap">
   <aside>
     <div class="brand">
-      <h1>¿Le va a gustar?</h1>
-      <p>Bitácora del proyecto: predecir si una persona va a disfrutar una película, a lo largo de todo el curso.</p>
+      <h1>¿Qué contenido le gusta?</h1>
+      <p>Bitácora del proyecto: un recomendador de tipos de contenido, construido clase por clase.</p>
     </div>
     <div class="total"><span id="totalTxt">0 de 0 tareas</span></div>
     <div class="bar"><i id="totalBar"></i></div>
@@ -108,11 +111,12 @@
   <main>
     <div class="intro">
       <h2>De qué se trata</h2>
-      <p>Un sistema que, dado un usuario (edad, sexo, ocupación, historial) y una película (género, año, sinopsis), predice si le va a gustar. Empieza con un modelo que apenas le gana al azar y termina compitiendo contra un LLM. Cada etapa responde a un objetivo del programa y a una clase concreta.</p>
+      <p>Un sistema que recibe una persona y devuelve qué tipos de contenido le gustarían. Se construye por capas: primero solo con su perfil demográfico, después sumando lo que ya consumió, después dejando que una red aprenda sus propias representaciones, y al final poniéndolo a competir contra un modelo de lenguaje. La pregunta que atraviesa todo el proyecto es cuánto aporta cada capa.</p>
       <dl>
-        <dt>Dataset</dt><dd>MovieLens 1M (ratings.dat, users.dat, movies.dat). Trae sexo, rango de edad y ocupación por usuario.</dd>
-        <dt>Etiqueta</dt><dd>"Le gusta" = rating ≥ 4. Se define en la etapa 2 y no se cambia después.</dd>
-        <dt>Adónde lleva</dt><dd>La etapa 9 arma un buscador semántico y la 10 mide prompts con métricas: las dos son la antesala directa del Módulo 4.</dd>
+        <dt>Dataset</dt><dd>Tenrec (Tencent, NeurIPS 2022). Cuatro archivos CSV de dos plataformas de feed, videos y artículos. Cada fila trae usuario, ítem, clic, me gusta, compartir, seguir, categoría del contenido, cantidad de visualizaciones, y el sexo y la edad del usuario.</dd>
+        <dt>Objetivo</dt><dd>Para cada persona y cada categoría de contenido, predecir si le gusta más que su propio promedio. El sistema devuelve el perfil de categorías de esa persona.</dd>
+        <dt>Por qué categorías</dt><dd>Predecir un ítem concreto es ruidoso; predecir una categoría promedia decenas de ítems y deja ver la señal demográfica.</dd>
+        <dt>Dónde conseguirlo</dt><dd>Sitio oficial de Tencent, aceptando los términos de licencia. El repositorio yuangh-x/2022-NIPS-Tenrec en GitHub tiene el enlace y código de referencia.</dd>
       </dl>
       <div class="legend">
         <span style="--c:var(--m1)">Módulo 1 · Fundamentos</span>
@@ -125,8 +129,21 @@
     <div class="rule">
       <h3>Cómo usar esta guía</h3>
       <p>El curso no evalúa programación. El código lo puede escribir un asistente de IA: pedile el script, corrélo y quedate con el resultado. Tu trabajo es el otro, el difícil: decidir qué experimento vale la pena, leer lo que salió y explicar por qué salió así.</p>
-      <p>Por eso ninguna etapa termina cuando el código corre. Termina cuando podés explicar el resultado en voz alta, sin mirar la pantalla, a alguien que no cursó la materia. Usá el campo de cada etapa para escribir esa explicación: si no te sale en tres líneas, todavía no la entendiste.</p>
-      <p>Orden que rinde: leer el PDF de la clase, hacer la etapa, releer el PDF. La segunda lectura es otra cosa.</p>
+      <p>Ninguna etapa termina cuando el código corre. Termina cuando podés explicar el resultado en voz alta, sin mirar la pantalla, a alguien que no cursó la materia. Usá el campo de cada etapa para escribir esa explicación: si no te sale en tres líneas, todavía no la entendiste.</p>
+      <p>Orden que rinde: leer el PDF de la clase, hacer la etapa, releer el PDF.</p>
+    </div>
+
+    <div class="cov">
+      <h3>Cobertura de los objetivos del curso</h3>
+      <table>
+        <tr><th>Objetivo del programa</th><th>Dónde se cumple</th></tr>
+        <tr><td>Comprender el marco general de la IA y sus aplicaciones</td><td>Etapa 1</td></tr>
+        <tr><td>Diferenciar IA, Machine Learning y Deep Learning</td><td>Etapa 1, y el proyecto lo recorre: 4 es ML, 7 a 9 es DL, 10 es generativa</td></tr>
+        <tr><td>Entrenar modelos supervisados básicos</td><td>Etapas 3 y 4</td></tr>
+        <tr><td>Implementar redes neuronales simples</td><td>Etapas 7 y 8</td></tr>
+        <tr><td>Aplicar técnicas de prompt engineering</td><td>Etapa 10</td></tr>
+        <tr><td>Evaluar resultados de modelos con métricas adecuadas</td><td>Etapa 5, reutilizada en 6, 7 y 10</td></tr>
+      </table>
     </div>
 
     <div id="phases"></div>
@@ -142,41 +159,45 @@ const PHASES = [
   obj:"Objetivo: comprender el marco general de la IA · diferenciar IA, ML y Deep Learning",
   why:"El curso insiste en que el término correcto dice qué tipo de sistema es: qué datos necesita, qué puede hacer y qué error esperar. Esta etapa es casi toda escritura y decisión, no código, y es la que más rinde en el parcial.",
   tasks:[
-    ["Escribir en una oración qué hace el sistema: entrada, salida y para quién sirve.",
+    ["Escribir en una oración qué hace el sistema: recibe una persona, devuelve qué tipos de contenido le gustarían.",
      "Clase 4, fase 1. El error clásico es empezar por el modelo sin saber qué decisión va a alimentar."],
-    ["Dibujar los círculos anidados (IA ⊃ ML ⊃ DL ⊃ generativa) y ubicar tu proyecto. Anotar además cómo sería una versión generativa del mismo problema: un sistema que escribe la reseña en vez de predecir el rating.",
-     "Clase 2: los círculos son anidados, no excluyentes. Comparar tu proyecto con su versión generativa es la forma más rápida de fijar la diferencia entre ML e IA generativa."],
+    ["Dibujar los círculos anidados (IA ⊃ ML ⊃ DL ⊃ generativa) y ubicar cada etapa del proyecto. Anotar además cómo sería una versión generativa: un sistema que escribe el contenido en vez de recomendarlo.",
+     "Clase 2: los círculos son anidados, no excluyentes. Tu proyecto se va metiendo hacia adentro a medida que avanza, y eso es lo que hace concreta la diferencia entre ML, DL y generativa."],
     ["Clasificar el paradigma y escribir cómo sería el mismo problema con los otros dos: qué haría una versión no supervisada y una por refuerzo.",
-     "Clase 3: la tabla de los tres paradigmas. Tenés etiquetas (el rating), así que es supervisado; pensar las otras dos versiones es lo que te deja responder cualquier pregunta sobre el tema."],
-    ["Definir la métrica de negocio: de lo que recomiendo, qué porcentaje realmente gusta, y cuántas películas que hubieran gustado dejo pasar.",
-     "Clase 4, fase 6: el error clásico es maximizar la métrica técnica olvidando la de negocio. La vas a usar en la etapa 5 para elegir el umbral."],
-    ["Bajar MovieLens 1M y describir en dos líneas qué hay en cada archivo.",
-     "Clase 4, fase 2. Entender el esquema antes de cargar evita uniones mal hechas que después parecen buenos resultados."],
+     "Clase 3: la tabla de los tres paradigmas. Es supervisado porque tenés la etiqueta; pensar las otras dos versiones es lo que te deja responder cualquier pregunta sobre el tema."],
+    ["Definir la métrica de negocio en lenguaje común: de las categorías que recomiendo, qué porcentaje le gusta de verdad, y cuántas categorías que le hubieran gustado dejo pasar. Decidir cuál de las dos importa más.",
+     "Clase 4, fase 6: el error clásico es maximizar la métrica técnica olvidando la de negocio. Esa decisión es la que vas a usar en la etapa 5 para elegir el umbral."],
     ["Escribir las 7 fases del ciclo de vida aplicadas a este proyecto, una línea por fase.",
-     "Clase 4. Escribirlo con tus palabras es lo que lo fija, y es material de parcial casi textual."]
+     "Clase 4. Escribirlo con tus palabras es lo que lo fija, y es material de parcial casi textual."],
+    ["Anotar la hipótesis que vas a poner a prueba: cuánto explica el perfil demográfico frente a lo que la persona ya consumió.",
+     "Sin hipótesis escrita al principio, cualquier resultado parece bueno o malo según el humor. Con ella, todos los resultados significan algo."]
   ],
-  deliver:"Una página escrita: problema, ubicación en la taxonomía, los tres paradigmas comparados, métrica de negocio y las 7 fases."
+  deliver:"Una página escrita: el sistema en una oración, la taxonomía, los tres paradigmas, la métrica de negocio, las 7 fases y la hipótesis."
 },
 {
-  id:"p1", mod:"m1", title:"Conocer los datos",
+  id:"p1", mod:"m1", title:"Conseguir y conocer los datos",
   ref:"M1 · Clase 4 (fases 2 a 4) · demo Titanic · actividad Palmer Penguins",
   obj:"Objetivo: comprensión práctica del ciclo de vida de un proyecto de ML",
-  why:"La actividad de pingüinos pide explícitamente redactar conclusiones propias a partir de lo que observás. Acá además tomás dos decisiones que condicionan todo el resto: cuál es la etiqueta y dónde corta el test.",
+  why:"Casi todo el trabajo real está en cargar, explorar y transformar. Acá además tomás las tres decisiones que condicionan el resto del proyecto: qué escenario usás, cómo definís la etiqueta y dónde corta el test.",
   tasks:[
-    ["Unir ratings, users y movies en una tabla. Verificar que la cantidad de filas sea la esperada.",
-     "Clase 4, fase 3. Una unión que duplica o pierde filas contamina todo lo que sigue y es casi invisible después."],
-    ["Explorar y graficar: ratings por sexo, por rango de edad, por ocupación, por género y por año. Escribir tres conclusiones con tus palabras.",
-     "Actividad de Palmer Penguins. Acá vas a ver que la demografía sola separa poco, y eso justifica todo lo que viene."],
-    ["Revisar datos faltantes y decidir qué hacer con cada caso.",
-     "Clase 4, fase 3, y el caso interesante que señala la actividad: los faltantes son parte de cualquier dataset real."],
-    ["Definir la etiqueta: le_gusta = rating ≥ 4. Medir qué porcentaje de casos son positivos.",
-     "Clase 7: si las clases están desbalanceadas, accuracy va a mentir. Conocer la proporción ahora es lo que te permite detectarlo después."],
-    ["Separar train y test, y no volver a mirar test hasta la etapa 5.",
-     "Clase 7, data leakage: el error más costoso, porque destruye la confianza cuando se descubre en producción."],
-    ["Extra: agrupar usuarios por sus géneros favoritos con K-means y describir los grupos que aparecen.",
-     "Clase 3: 'tengo millones de clientes pero no sé qué tipos tengo' es el caso de uso del aprendizaje no supervisado. Te deja ver el segundo paradigma sobre tus propios datos."]
+    ["Bajar Tenrec del sitio oficial aceptando los términos y guardarlo en Google Drive. Empezar por QK-video, que es el escenario principal.",
+     "Clase 4, fase 2. Conviene Drive y no la sesión de Colab, que se borra al reiniciar. El repositorio de GitHub del paper tiene el enlace de descarga."],
+    ["Describir las columnas de QK-video: usuario, ítem, clic, me gusta, compartir, seguir, categoría, visualizaciones, sexo y edad. Anotar cuáles son señales de interés y cuáles son atributos.",
+     "Clase 4, fase 2. Entender el esquema antes de cargar evita interpretar mal una columna durante semanas."],
+    ["Trabajar con una muestra de usuarios, no con el archivo entero. Tomar unos pocos miles de usuarios con todas sus interacciones.",
+     "Son 5 millones de usuarios y 140 millones de interacciones: Colab no lo aguanta. Muestrear por usuario completo, nunca por fila suelta, o rompés los historiales."],
+    ["Explorar y graficar: distribución de edad y sexo, categorías más consumidas, tasa de me gusta por categoría, y tasa de me gusta por categoría separada por sexo y por tramo de edad. Escribir tres conclusiones propias.",
+     "Actividad de Palmer Penguins, que pide explícitamente redactar conclusiones. Este último gráfico es el corazón de tu hipótesis: ahí vas a ver si la demografía separa o no."],
+    ["Entender la retroalimentación negativa: en Tenrec un clic en cero significa que el contenido se le mostró y no lo abrió, no que no existe el dato.",
+     "Es una particularidad del dataset y una ventaja grande. La mayoría de los datasets solo tienen lo que la gente sí consumió; acá tenés lo que rechazó."],
+    ["Definir la etiqueta: para cada usuario y cada categoría, calcular su tasa de me gusta en esa categoría y compararla contra su propia tasa general. Etiqueta positiva si está por encima.",
+     "Si usaras la tasa cruda, el modelo aprendería quién es entusiasta en vez de quién prefiere qué. Comparar contra el propio promedio mide preferencia relativa, que es lo que te interesa."],
+    ["Partir las interacciones de cada usuario en dos mitades: una para construir features y otra para calcular la etiqueta. Después separar train y test por usuario.",
+     "Clase 7, data leakage: si la etiqueta sale del historial y el historial también es feature, estás prediciendo con la respuesta adentro. Da resultados espectaculares y falsos."],
+    ["Medir el desbalance de la etiqueta: qué porcentaje de pares usuario-categoría son positivos.",
+     "Clase 7: si las clases están desbalanceadas, accuracy va a mentir. Conocer la proporción ahora es lo que te permite detectarlo después."]
   ],
-  deliver:"Notebook de exploración con gráficos y tres conclusiones escritas. Poder decir en voz alta qué es leakage y por qué separaste el test ahora."
+  deliver:"Notebook de exploración con gráficos y tres conclusiones escritas, más los conjuntos de train y test guardados. Poder explicar en voz alta qué es leakage y por qué partiste el historial en dos."
 },
 {
   id:"p2", mod:"m2", title:"Cómo aprende un modelo",
@@ -184,37 +205,41 @@ const PHASES = [
   obj:"Objetivo: entrenar modelos supervisados básicos",
   why:"Un modelo aprende minimizando su error paso a paso. No hace falta que escribas el algoritmo: alcanza con verlo moverse y entender qué lo hace converger o romperse. Esa intuición es la que reaparece en backpropagation.",
   tasks:[
-    ["Correr el notebook de gradient descent de la clase sobre tus datos, prediciendo el rating.",
+    ["Primer modelo con solo demografía: sexo, edad y la categoría, prediciendo la etiqueta. Regresión logística.",
+     "Clase 5. Este es el modelo de la hipótesis: si el perfil demográfico explicara el gusto, acá ya tendrías un buen resultado."],
+    ["Correr el notebook de gradient descent de la clase sobre estos datos y graficar el costo por iteración.",
      "Clase 5: función de costo y descenso por gradiente, el motor de todo lo que sigue en el curso."],
-    ["Mover el learning rate a tres valores distintos y describir qué pasa con uno muy chico y con uno muy grande.",
-     "Clase 5. Ver la curva de costo estancarse o explotar es lo que hace que el concepto quede; leerlo no alcanza."],
-    ["Entrenar una LogisticRegression y un DummyClassifier con strategy='most_frequent' y con strategy='stratified'. Calcular cuántos puntos porcentuales le gana el modelo a cada baseline.",
-     "Actividad de la clase 5, tal cual la consigna. Si el modelo no le gana al dummy, no aprendió nada."],
+    ["Mover el learning rate a tres valores y describir qué pasa con uno muy chico y con uno muy grande.",
+     "Clase 5. Ver la curva estancarse o explotar es lo que fija el concepto; leerlo no alcanza."],
+    ["Comparar contra un DummyClassifier con strategy='most_frequent' y con strategy='stratified'. Calcular cuántos puntos porcentuales le gana el modelo a cada uno.",
+     "Actividad de la clase 5, tal cual la consigna. Si tu modelo no le gana al dummy, no aprendió nada."],
     ["Responder por escrito: si el baseline sacara 95%, ¿qué diría eso sobre el accuracy?",
      "Es la pregunta de cierre de esa actividad y la bisagra hacia la clase 7."],
-    ["Explicarle a alguien que no cursó la materia qué es una función de costo, usando tu modelo como ejemplo.",
-     "Si podés explicarlo sin jerga, lo entendiste. Es el test real de esta etapa."]
+    ["Anotar el resultado de la capa demográfica y guardarlo: es la línea de base contra la que vas a comparar todo lo demás.",
+     "Sin este número, las mejoras posteriores no significan nada. Con él, cada etapa siguiente tiene una medida de cuánto aportó."]
   ],
-  deliver:"Las curvas de costo con los tres learning rates y una tabla comparando el modelo contra los dos baselines."
+  deliver:"Las curvas de costo, la tabla contra los dos baselines y el número de referencia de la capa demográfica."
 },
 {
   id:"p3", mod:"m2", title:"El zoológico de modelos",
   ref:"M2 · Clase 6 · actividad ¿algoritmo o features?",
   obj:"Objetivo: entrenar modelos supervisados y saber cuál elegir",
-  why:"Para tablas el curso recomienda Random Forest o XGBoost, pero antes de cambiar de algoritmo conviene mejorar los features: el mismo modelo con mejores datos suele ganar. Esta etapa existe para que lo compruebes en vez de creerlo.",
+  why:"Para tablas el curso recomienda Random Forest o XGBoost, pero antes de cambiar de algoritmo conviene mejorar los features: el mismo modelo con mejores datos suele ganar. Esta etapa existe para que lo compruebes, y de paso es donde tu hipótesis se pone a prueba.",
   tasks:[
-    ["Entrenar los seis algoritmos de la actividad con los mismos features: Logistic Regression, Decision Tree, Random Forest, KNN, SVM y XGBoost. Comparar accuracy.",
-     "Actividad de la clase 6, caso 1. La sorpresa habitual es cuánto menos varía de lo que uno espera."],
-    ["Agregar features del historial (rating promedio del usuario, cantidad de ratings, género favorito) y de la película (popularidad, rating promedio), calculados solo con train.",
-     "Clase 6: mejorar los features primero. Clase 7: calcularlos con test sería leakage."],
-    ["Armar la matriz {sin features nuevos / con features nuevos} × {Random Forest / XGBoost / KNN} y responder: ¿el feature engineering ayuda a todos los modelos o solo a alguno?",
-     "Actividad de la clase 6, caso 2. Es el experimento central del módulo y una respuesta de parcial casi asegurada."],
+    ["Entrenar los seis algoritmos de la actividad con solo demografía: Logistic Regression, Decision Tree, Random Forest, KNN, SVM y XGBoost. Comparar.",
+     "Actividad de la clase 6, caso 1: fijar los features y ver cuánto varía la accuracy entre algoritmos. La sorpresa habitual es cuánto menos varía de lo esperado."],
+    ["Agregar la capa de comportamiento: de la mitad reservada para features, calcular cuántas interacciones tuvo el usuario, su tasa general de me gusta, sus categorías más vistas y su tiempo de visualización promedio.",
+     "Clase 6: mejorar los features antes de cambiar de algoritmo. Todo esto sale solo de la mitad de features, nunca de la mitad de etiquetas."],
+    ["Agregar features de la categoría: popularidad, tasa de me gusta promedio, cantidad de ítems.",
+     "Clase 6, feature engineering. Calculadas solo con train, o es leakage."],
+    ["Armar la matriz {solo demografía / demografía más comportamiento} × {Random Forest / XGBoost / KNN} y responder si el feature engineering ayuda a todos los modelos o solo a alguno.",
+     "Actividad de la clase 6, caso 2. Es el experimento central del módulo y, en tu proyecto, la respuesta directa a la hipótesis de la etapa 1."],
     ["Explicar con tus resultados la diferencia entre bagging y boosting.",
      "Clase 6: cien árboles que votan y cuyos errores se cancelan, contra árboles secuenciales donde cada uno corrige al anterior."],
-    ["Mirar la importancia de features del Random Forest y resumir qué aprendió el modelo.",
-     "Clase 6: los modelos interpretables sirven cuando hay que explicar cada decisión. También anticipa el análisis de sesgo de la etapa siguiente."]
+    ["Mirar la importancia de features del Random Forest y anotar en qué puesto quedaron sexo y edad frente a las variables de comportamiento.",
+     "Clase 6: los modelos interpretables sirven cuando hay que explicar decisiones. Este ranking es una de las conclusiones más citables de tu informe."]
   ],
-  deliver:"La matriz algoritmo × features y un párrafo respondiendo qué pesó más, si el algoritmo o los datos."
+  deliver:"La matriz algoritmo × features, el ranking de importancia y un párrafo respondiendo cuánto aportó cada capa."
 },
 {
   id:"p4", mod:"m2", title:"Evaluar con las métricas adecuadas",
@@ -222,17 +247,17 @@ const PHASES = [
   obj:"Objetivo explícito del programa: evaluar resultados de modelos con métricas adecuadas",
   why:"Un 99% de accuracy puede ser el peor modelo que armaste. El clasificador no devuelve una clase, devuelve una probabilidad, y elegir dónde cortar es una decisión de negocio. Esta es la etapa más importante de las once.",
   tasks:[
-    ["Armar la matriz de confusión y nombrar cada celda en términos del problema: recomendé y no gustó, no recomendé y hubiera gustado.",
+    ["Armar la matriz de confusión y nombrar cada celda en términos del problema: recomendé una categoría y no le gustó, no la recomendé y le hubiera gustado.",
      "Clase 7: falso positivo y falso negativo no pesan igual. Ponerles nombre concreto es lo que hace que la métrica signifique algo."],
     ["Calcular precision, recall, F1 y ROC-AUC para todos los modelos de la etapa 4 y ordenarlos por AUC.",
      "Clase 7: el AUC resume el rendimiento en todos los umbrales. La escala del curso: 0.5 es una moneda, 0.7 aceptable, 0.9 excelente."],
     ["Graficar la curva ROC y explicar qué significa la diagonal.",
      "Clase 7: cada punto de la curva es un umbral distinto y la diagonal es el clasificador aleatorio."],
     ["Repetir la demo con umbrales 0.3, 0.5 y 0.7 y elegir uno justificándolo con tu métrica de negocio.",
-     "Notebook de la clase 7: bajar el umbral prioriza recall, subirlo prioriza precision. ¿Qué duele más acá, molestar o dejar pasar algo que hubiera gustado?"],
-    ["Revisar que ninguna feature use información del test ni del propio rating que querés predecir.",
-     "Clase 7: el leakage es el error más costoso. Un AUC sospechosamente alto es la primera señal."],
-    ["Calcular precision y recall por separado para cada sexo y rango de edad. Reportar si el modelo funciona peor con algún grupo.",
+     "Notebook de la clase 7. En un recomendador, ¿qué duele más: mostrar algo que no interesa, o no mostrar algo que sí?"],
+    ["Auditar leakage: verificar que ninguna feature use la mitad de interacciones con que calculaste la etiqueta.",
+     "Clase 7: el leakage es el error más costoso. Un AUC sospechosamente alto es la primera señal, y en este proyecto es el riesgo número uno."],
+    ["Calcular precision y recall por separado para cada sexo y tramo de edad. Reportar si el modelo funciona peor con algún grupo.",
      "Clase 4, fase 6. Un modelo que usa sexo y edad puede volverse una máquina de estereotipos; medirlo es parte de evaluar bien."],
     ["Escribir el informe de evaluación con las métricas técnicas, la de negocio, el umbral elegido y el análisis por grupo.",
      "Clase 7: evaluar bien es tan difícil, y tan importante, como elegir el algoritmo."]
@@ -247,12 +272,12 @@ const PHASES = [
   tasks:[
     ["Provocar overfitting a propósito con un Random Forest sin límite de profundidad y comparar train contra validación.",
      "Clase 8: ver el gap con tus datos es lo que te permite reconocerlo después, cuando no lo estés buscando."],
-    ["Graficar la curva de validación variando la profundidad y marcar dónde está underfitting, el punto justo y overfitting.",
+    ["Graficar la curva de validación variando la profundidad y marcar underfitting, punto justo y overfitting.",
      "Clase 8: el tradeoff sesgo-varianza. Esa curva en U es el concepto central de la clase."],
     ["Aplicar regularización L1 y L2 en la regresión logística y observar qué les pasa a los coeficientes y al gap.",
      "Clase 8: L1 lleva coeficientes a cero y selecciona features, L2 los achica. Vuelve en la etapa 8 con Dropout y BatchNorm."],
-    ["Reemplazar el corte único por cross-validation de 5 folds y reportar media y desvío del AUC.",
-     "Clase 4, fase 5 y clase 8: la validación cruzada estima el rendimiento real, y el desvío te dice cuánto confiar en el número."],
+    ["Reemplazar el corte único por cross-validation de 5 folds, agrupando por usuario, y reportar media y desvío del AUC.",
+     "Clase 8. Agrupar por usuario importa: si el mismo usuario aparece en train y en validación, el resultado está inflado."],
     ["Elegir los hiperparámetros finales con validación cruzada y dejar fijo el modelo clásico.",
      "Clase 8: ajustar hiperparámetros mirando el test es leakage."]
   ],
@@ -262,81 +287,83 @@ const PHASES = [
   id:"p6", mod:"m3", title:"Implementar una red neuronal simple",
   ref:"M3 · Clase 9 — redes neuronales y cómo aprenden",
   obj:"Objetivo explícito del programa: implementar redes neuronales simples",
-  why:"Hasta acá el humano diseñó los features. La pregunta del deep learning es otra: ¿y si el modelo aprendiera sus propias representaciones? Backpropagation es el gradient descent de la etapa 3, ahora encadenado capa por capa.",
+  why:"Hasta acá vos diseñaste los features. La pregunta del deep learning es otra: ¿y si el modelo aprendiera sus propias representaciones? Backpropagation es el gradient descent de la etapa 3, encadenado capa por capa.",
   tasks:[
     ["Armar una red con dos capas ocultas (ReLU) y salida sigmoid sobre las mismas features de la etapa 6.",
-     "Clase 9: ReLU en las capas ocultas, sigmoid para salida binaria. La tabla de activaciones de la clase dice cuál va en cada lugar y por qué."],
+     "Clase 9: ReLU en capas ocultas, sigmoid para salida binaria. La tabla de activaciones de la clase dice cuál va en cada lugar y por qué."],
     ["Explicar por escrito qué hace backpropagation, conectándolo con lo que viste en la etapa 3.",
-     "Clase 9: el modelo mide su error y ajusta sus pesos capa por capa. Sin esto no se entiende el fine-tuning que viene en M4."],
+     "Clase 9: el modelo mide su error y ajusta sus pesos capa por capa. Sin esto no se entiende el fine-tuning del Módulo 4."],
     ["Graficar loss y accuracy de train y validación por época.",
      "Clases 9 y 10: la curva de pérdida es la herramienta de diagnóstico de todo el módulo."],
-    ["Comparar la red contra XGBoost y escribir cuál gana y por qué eso es esperable en datos de tabla.",
-     "Clase 6: para tablas siguen ganando los árboles. Las redes brillan con datos crudos, que es la etapa 9."],
+    ["Comparar la red contra XGBoost con las mismas métricas y escribir cuál gana y por qué eso es esperable en datos de tabla.",
+     "Clase 6: para tablas siguen ganando los árboles. Las redes despegan en la etapa 9, cuando dejan de recibir features hechos a mano."],
     ["Anotar qué representa la salida de la capa oculta para un usuario.",
      "Clase 11 lo retoma: esa salida es la representación que la red aprendió. Ahí nace la idea de embedding."]
   ],
   deliver:"La red entrenada, sus curvas y la comparación contra el modelo clásico. Poder explicar en voz alta qué hace una neurona y para qué sirve una activación."
 },
 {
-  id:"p7", mod:"m3", title:"Entrenar en serio: regularización y transfer learning",
+  id:"p7", mod:"m3", title:"Regularización y transfer learning",
   ref:"M3 · Clase 10 · demo con y sin regularización",
   obj:"Objetivo: implementar y evaluar redes que sirvan fuera del entrenamiento",
-  why:"Dropout, BatchNorm y early stopping son el kit mínimo para que una red generalice. Transfer learning cambia la pregunta: de cómo entreno a cómo adapto lo que ya existe, que es el mismo mecanismo con el que se adaptan los LLMs.",
+  why:"Dropout, BatchNorm y early stopping son el kit mínimo para que una red generalice. Y Tenrec trae transfer learning incorporado: tiene cuatro escenarios con usuarios superpuestos, así que podés preentrenar donde sobran datos y transferir donde faltan, que es exactamente el mecanismo con que se adaptan los LLMs.",
   tasks:[
     ["Repetir el experimento de la clase: la misma arquitectura sin regularización y con BatchNorm, Dropout y early stopping. Comparar el gap entre train y validación.",
      "Demo de la clase 10: 0.99/0.71 sin regularizar contra 0.87/0.85 con regularización. Una red con 99% de train accuracy es inútil en producción."],
     ["Anotar por qué BatchNorm se comporta distinto al entrenar que al predecir.",
-     "Clase 10: usa las estadísticas del lote durante el entrenamiento y el promedio acumulado después. Confundir los modos da resultados raros."],
-    ["Convertir las sinopsis en vectores con un modelo de texto preentrenado y usarlos como features adicionales.",
-     "Clase 10: transfer learning. No entrenás desde cero, aprovechás un modelo que ya entiende lenguaje."],
+     "Clase 10: usa las estadísticas del lote durante el entrenamiento y el promedio acumulado después. Confundir los modos da resultados raros y difíciles de rastrear."],
+    ["Entrenar el modelo en QK-video, que es el escenario con más datos, y transferir los pesos a QB-video, que tiene menos, usando los usuarios que aparecen en ambos.",
+     "Clase 10: transfer learning. El paper de Tenrec reporta mejoras cercanas al 25% haciendo exactamente esto. Es transfer learning real, medido sobre tus propios datos."],
+    ["Comparar tres versiones en QB-video: entrenada desde cero, transferida con todas las capas libres, y transferida con las primeras capas congeladas.",
+     "Clase 10: el parche liviano sobre el modelo congelado. Es la misma lógica que fine-tuning y LoRA, a escala reducida."],
     ["Escribir en dos líneas qué tienen en común transfer learning, fine-tuning y LoRA.",
-     "Clase 10: todos son variantes del mismo concepto, un parche liviano sobre un modelo congelado. Es tema de parcial y base del Módulo 4."],
-    ["Comparar en una tabla la red tabular contra la red con texto.",
-     "Cierra el arco 'features a mano → el modelo aprende sus features' con el que la clase 9 justifica el deep learning."]
+     "Clase 10: todos son variantes del mismo concepto. Es tema de parcial y base del Módulo 4."]
   ],
-  deliver:"Las dos curvas del experimento lado a lado y la tabla de comparación."
+  deliver:"Las curvas del experimento de regularización y la tabla de los tres escenarios de transferencia."
 },
 {
-  id:"p8", mod:"m3", title:"Embeddings y búsqueda semántica",
+  id:"p8", mod:"m3", title:"Embeddings y similitud",
   ref:"M3 · Clase 11 — representaciones, similitud coseno, RAG y arquitecturas",
   obj:"Objetivo: comprender cómo representan significado los modelos modernos",
-  why:"Un embedding es un vector donde la vecindad tiene significado, y nadie diseñó esas dimensiones: emergieron del entrenamiento. El flujo corpus → embeddings → similitud → top-K es el componente de recuperación de un sistema RAG, que el Módulo 4 retoma a escala.",
+  why:"Un embedding es un vector donde la vecindad tiene significado, y nadie diseñó esas dimensiones: emergieron del entrenamiento. La clase dice que se obtienen extrayendo las representaciones de una red ya entrenada, y eso es exactamente lo que vas a hacer acá.",
   tasks:[
-    ["Reemplazar la codificación one-hot de usuario y película por capas de embedding aprendidas.",
+    ["Reemplazar la codificación one-hot de usuario y categoría por capas de embedding aprendidas, y concatenarlas con la demografía.",
      "Clase 11: las representaciones aprendidas superan a los features manuales cuando el espacio de posibilidades es enorme. Así funcionan los recomendadores reales."],
-    ["Buscar las películas más parecidas a una dada usando similitud coseno sobre esos embeddings. ¿Los vecinos tienen sentido?",
+    ["Extraer los embeddings de categoría y calcular la similitud coseno entre todas. Buscar las más parecidas a una dada.",
      "Clase 11: la similitud coseno mide el ángulo, no la distancia, y el largo del vector no importa. Umbral habitual por encima de 0.7."],
-    ["Anotar si aparecieron agrupaciones que nadie programó: sagas, géneros, épocas.",
+    ["Anotar si aparecieron agrupaciones que nadie programó: categorías que quedaron cerca sin que vos lo indicaras.",
      "Clase 11: las relaciones emergen del entrenamiento. Es el equivalente en tu proyecto de rey − hombre + mujer ≈ reina."],
-    ["Encodear todas las sinopsis con sentence-transformers y comparar tres búsquedas: coincidencia exacta de texto, TF-IDF y búsqueda semántica. Documentar un caso donde solo la semántica acierta.",
+    ["Extraer los embeddings de usuario y buscar usuarios parecidos. Verificar si los vecinos comparten sexo y edad, o si se parecen por lo que consumen.",
+     "Es la pregunta de tu hipótesis, respondida desde otro ángulo: ¿qué usa la red para representar a una persona, su perfil o su comportamiento?"],
+    ["Armar un buscador semántico sobre las categorías: pedirle a un LLM una descripción en lenguaje natural de cada categoría, vectorizarlas con sentence-transformers, y buscar por consulta libre.",
+     "Clase 11: corpus, embeddings, similitud y top-K es el paso de recuperación de un RAG. Tenrec no trae texto, así que el texto lo generás vos; el flujo es idéntico."],
+    ["Comparar la búsqueda semántica contra una búsqueda por coincidencia exacta de palabras y documentar un caso donde solo la semántica acierta.",
      "Clase 11: la tabla de búsqueda tradicional contra semántica. El ejemplo del curso es 'partido de fútbol del fin de semana' encontrando 'encuentro deportivo del domingo'."],
-    ["Armar un RAG en miniatura: una consulta en lenguaje natural como 'ciencia ficción con tono melancólico' que devuelva las cinco películas más cercanas.",
-     "Clase 11: ese es exactamente el paso de recuperación de RAG. En M4 el mismo flujo corre sobre documentos reales con una base vectorial y termina en un LLM."],
-    ["Mapear qué arquitectura corresponde a cada parte del proyecto y por qué: MLP para lo tabular, CNN para imágenes, Transformer para texto.",
+    ["Mapear qué arquitectura corresponde a cada parte del proyecto y por qué: MLP para lo tabular, CNN para imágenes, Transformer para texto y secuencias.",
      "Clase 11, panorama de arquitecturas: cada una resolvió el límite de la anterior. Es una pregunta de parcial casi segura."],
-    ["Escribir un párrafo sobre adversarial examples: ¿podría alguien manipular tu sistema conociendo cómo funciona?",
+    ["Escribir un párrafo sobre adversarial examples aplicado a tu caso: ¿podría alguien manipular qué le recomienda el sistema, conociendo cómo funciona?",
      "Clase 11: un modelo con 99% de accuracy puede ser engañado a voluntad. Robustez y accuracy son propiedades distintas."]
   ],
-  deliver:"La demo de búsqueda semántica funcionando y una sección del informe sobre representaciones aprendidas."
+  deliver:"Los vecinos más cercanos de categorías y de usuarios, el buscador semántico funcionando y una sección del informe sobre representaciones aprendidas."
 },
 {
   id:"p9", mod:"m4", title:"Prompt engineering: el LLM contra tu modelo",
   ref:"Objetivos del programa · puente al Módulo 4 (LLMs, prompting y RAG)",
   obj:"Objetivo explícito del programa: aplicar técnicas de prompt engineering · utilizar modelos de IA generativa",
-  why:"Un LLM puede resolver tu mismo problema sin haber sido entrenado con tus datos. Acá lo ponés a competir contra tu modelo y lo medís con las mismas métricas de la etapa 5. Así el prompt engineering deja de ser intuición y pasa a ser algo que se compara con números.",
+  why:"Un LLM puede resolver tu mismo problema sin haber sido entrenado con tus datos. Acá lo ponés a competir y lo medís con las mismas métricas de la etapa 5. Así el prompt engineering deja de ser intuición y pasa a ser algo que se compara con números.",
   tasks:[
-    ["Tomar cien casos del test y pedirle a un LLM que prediga, para cada uno, si a esa persona le va a gustar esa película, dándole el perfil y los datos de la película.",
+    ["Tomar cien casos del test y pedirle a un LLM que prediga, dado el perfil de la persona y la categoría, si le va a gustar.",
      "Es clasificación sin entrenamiento previo, lo que se llama zero-shot. El contraste con todo lo anterior es el punto de la etapa."],
     ["Evaluar al LLM con precision, recall, F1 y accuracy, y compararlo contra tu XGBoost en la misma tabla.",
      "Cumple dos objetivos a la vez: aplicar prompting y evaluar con métricas adecuadas. El resultado suele sorprender en las dos direcciones."],
     ["Probar tres versiones del prompt sobre los mismos cien casos: una vaga, una con rol y criterios explícitos, y una con cinco ejemplos reales del train. Medir las tres.",
-     "Es la diferencia entre zero-shot y few-shot, medida en vez de intuida. Few-shot es aprender de ejemplos sin entrenar nada: vale la pena contrastarlo con lo que hace un modelo supervisado."],
+     "Es la diferencia entre zero-shot y few-shot, medida en vez de intuida. Few-shot es aprender de ejemplos sin entrenar nada."],
     ["Pedir la respuesta en formato estructurado, con una probabilidad entre 0 y 1 en vez de un sí o un no, y usarla para mover el umbral como en la etapa 5.",
      "La salida estructurada es una técnica central de prompting, y acá te permite calcular AUC y reusar todo el vocabulario de evaluación que ya tenés."],
-    ["Anotar los errores propios del LLM: películas que inventa, criterios que cambia entre respuestas, sesgos que muestra al razonar sobre edad o sexo.",
+    ["Darle al LLM el historial resumido de la persona además de su demografía, y medir cuánto mejora.",
+     "Es la misma pregunta de tu hipótesis, aplicada a un modelo completamente distinto. Si también mejora, el hallazgo se vuelve mucho más sólido."],
+    ["Anotar los errores propios del LLM: categorías que inventa, criterios que cambia entre respuestas, sesgos que muestra al razonar sobre edad o sexo.",
      "Clase 2: cada tipo de sistema tiene su tipo de error esperable. Los del LLM no se parecen a los de un Random Forest, y distinguirlos es parte del objetivo."],
-    ["Usar el LLM para etiquetar el tono o los temas de cada sinopsis, sumar esas etiquetas como features a tu modelo y ver si mejora.",
-     "Es IA generativa usada como herramienta dentro de un pipeline de ML clásico, que es como se usa en la práctica hoy."],
     ["Escribir la conclusión: ¿para qué problema conviene cada enfoque y por qué?",
      "Es la síntesis del curso entero. Si podés responderla con datos tuyos, entendiste de qué se trata."]
   ],
@@ -348,106 +375,9 @@ const PHASES = [
   obj:"Objetivo: integrar todo el recorrido y prepararse para la evaluación",
   why:"El proyecto termina cuando otra persona entiende qué hiciste y por qué. Esta etapa convierte el trabajo en algo que podés defender en un parcial o en una entrevista.",
   tasks:[
-    ["Escribir el documento final: problema, datos, cada modelo con sus métricas, umbral elegido, análisis por grupo, limitaciones y qué harías distinto.",
-     "Clase 4, todas las fases. El documento es el proyecto; el resto es evidencia."],
-    ["Describir cómo se pondría en producción y qué monitorearías: qué métrica mirar cada mes y qué la haría caer.",
-     "Clase 4, fase 7: model drift. El 80% del trabajo real de ML está acá, aunque no lo implementes."],
-    ["Pedirle a un asistente cinco preguntas de múltiple opción, un caso práctico con dos preguntas de análisis y dos conceptuales sobre los Módulos 1 a 3. Responderlas usando tu proyecto de ejemplo y verificar si están bien formuladas.",
-     "Actividad de la clase 11, tal cual la consigna. Contestarlas con tu propio caso en la mano es el mejor test de comprensión que hay."],
-    ["Contar el proyecto entero en cinco minutos, en voz alta, sin notas.",
-     "Si podés hacerlo, estás listo. Si te trabás en algún punto, ese es exactamente el tema que te falta releer."],
-    ["Anotar qué le agregarías si tuvieras un LLM generando la respuesta final del buscador.",
-     "Clase 11: en M4 el mismo flujo corre sobre documentos reales, con base vectorial y un LLM. Dejás el gancho puesto."]
-  ],
-  deliver:"Documento final, el set de preguntas respondido y una explicación oral de cinco minutos que te salga fluida."
-}
-];
-
-const KEY="bitacora_le_va_a_gustar_v3";
-let state={done:{},notes:{}};
-let canStore=true;
-try{const s=localStorage.getItem(KEY);if(s)state=JSON.parse(s);}catch(e){canStore=false;}
-if(!canStore){document.getElementById("storageHint").textContent="Este entorno no permite guardar. Usá Exportar para conservar tu progreso.";}
-
-function save(){if(!canStore)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-
-function render(){
-  const root=document.getElementById("phases");
-  const nav=document.getElementById("nav");
-  root.innerHTML="";nav.innerHTML="";
-  let total=0,done=0;
-  PHASES.forEach((p,pi)=>{
-    const n=pi+1;
-    const sec=document.createElement("section");
-    sec.className="phase";sec.id=p.id;sec.style.setProperty("--c",`var(--${p.mod})`);
-    const pd=p.tasks.filter((t,i)=>state.done[p.id+"_"+i]).length;
-    total+=p.tasks.length;done+=pd;
-    sec.innerHTML=`
-      <div class="phead">
-        <div class="num">${n}</div>
-        <h2>${p.title}</h2>
-        <div class="count"><b>${pd}</b> / ${p.tasks.length}</div>
-        <div class="ref">${p.ref}</div>
-        <div class="obj">${p.obj}</div>
-      </div>
-      <div class="pbody">
-        <div class="why"><strong>Por qué esta etapa</strong>${p.why}</div>
-        <div class="tasks"></div>
-        <div class="deliver"><strong>Terminás cuando: </strong>${p.deliver}</div>
-        <div class="notes">
-          <label for="n_${p.id}">Tu explicación: qué hiciste, qué resultado dio y por qué</label>
-          <textarea id="n_${p.id}" placeholder="Escribilo como si se lo contaras a alguien que no cursó la materia…"></textarea>
-          <div class="saved" id="s_${p.id}"></div>
-        </div>
-      </div>`;
-    const tl=sec.querySelector(".tasks");
-    p.tasks.forEach((t,i)=>{
-      const k=p.id+"_"+i;
-      const d=document.createElement("div");
-      d.className="task"+(state.done[k]?" done":"");
-      d.innerHTML=`<input type="checkbox" id="${k}" ${state.done[k]?"checked":""}>
-        <div><label for="${k}">${t[0]}</label><div class="because">${t[1]}</div></div>`;
-      d.querySelector("input").addEventListener("change",e=>{state.done[k]=e.target.checked;save();render();});
-      tl.appendChild(d);
-    });
-    const ta=sec.querySelector("textarea");
-    ta.value=state.notes[p.id]||"";
-    let tmr;
-    ta.addEventListener("input",()=>{
-      state.notes[p.id]=ta.value;
-      clearTimeout(tmr);
-      tmr=setTimeout(()=>{save();const s=document.getElementById("s_"+p.id);s.textContent=canStore?"Guardado":"Sin guardar";setTimeout(()=>s.textContent="",1800);},500);
-    });
-    root.appendChild(sec);
-
-    const a=document.createElement("a");
-    a.href="#"+p.id;a.className=pd===p.tasks.length?"ok":"";
-    a.innerHTML=`<span class="n">${n}</span><span class="t">${p.title}</span><span class="c">${pd}/${p.tasks.length}</span>`;
-    nav.appendChild(a);
-  });
-  document.getElementById("totalTxt").textContent=`${done} de ${total} tareas completadas`;
-  document.getElementById("totalBar").style.width=(total?done/total*100:0)+"%";
-}
-
-document.getElementById("btnExport").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="progreso_le_va_a_gustar.json";
-  a.click();
-});
-document.getElementById("btnImport").addEventListener("click",()=>document.getElementById("fileImport").click());
-document.getElementById("fileImport").addEventListener("change",e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>{try{const s=JSON.parse(r.result);if(s.done&&s.notes){state=s;save();render();}}catch(err){alert("El archivo no tiene el formato esperado.");}};
-  r.readAsText(f);
-});
-document.getElementById("btnReset").addEventListener("click",()=>{
-  if(confirm("Se borran todas las marcas y notas. ¿Seguir?")){state={done:{},notes:{}};save();render();}
-});
-
-render();
-</script>
-</body>
-</html>
+    ["Escribir la función final: recibe una persona y devuelve sus categorías recomendadas, ordenadas por probabilidad y cortadas en el umbral elegido.",
+     "Clase 4, fase 7. Es el sistema que te propusiste construir al principio, funcionando."],
+    ["Armar la tabla que atraviesa todo el proyecto: cuánto aportó cada capa, de la demografía sola al LLM.",
+     "Es el resultado central. Cada fila es una etapa del curso y una respuesta a tu hipótesis."],
+    ["Escribir el documento final: problema, datos, cada modelo con sus métricas, umbral, análisis por grupo, limitaciones y qué harías distinto.",
+     "Clase 4, to
